@@ -1,0 +1,8 @@
+nbactions.xml
+nb-configuration.xml
+nbproject/
+src/main/resources
+src/test/resources/*.bc
+target/
+thirdparty/*
+!thirdparty/DEPENDENCIES
