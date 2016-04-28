@@ -29,6 +29,7 @@ import java.util.Iterator;
 import uk.ac.man.cs.llvm.bc.ParserListener;
 import uk.ac.man.cs.llvm.bc.records.Records;
 import uk.ac.man.cs.llvm.ir.ModuleGenerator;
+import uk.ac.man.cs.llvm.ir.module.records.TypesRecord;
 import uk.ac.man.cs.llvm.ir.types.*;
 
 public final class Types implements ParserListener, Iterable<Type> {
@@ -60,38 +61,39 @@ public final class Types implements ParserListener, Iterable<Type> {
 
     @Override
     public void record(long id, long[] args) {
+        TypesRecord record = TypesRecord.decode(id);
         Type type;
 
-        switch ((int) id) {
-            case 1:
+        switch (record) {
+            case NUMBER_OF_ENTRIES:
                 table = new Type[(int) args[0]];
                 return;
 
-            case 2:
+            case VOID:
                 type = MetaType.VOID;
                 break;
 
-            case 3:
-                type = FloatingPointType.F32;
+            case FLOAT:
+                type = FloatingPointType.FLOAT;
                 break;
 
-            case 4:
-                type = FloatingPointType.F64;
+            case DOUBLE:
+                type = FloatingPointType.DOUBLE;
                 break;
 
-            case 5:
+            case LABEL:
                 type = MetaType.LABEL;
                 break;
 
-            case 6:
+            case OPAQUE:
                 type = MetaType.OPAQUE;
                 break;
 
-            case 7:
+            case INTEGER:
                 type = new IntegerType((int) args[0]);
                 break;
 
-            case 8: {
+            case POINTER: {
                 int idx = (int) args[0];
 
                 if (idx > size) {
@@ -104,47 +106,47 @@ public final class Types implements ParserListener, Iterable<Type> {
                 }
                 break;
             }
-            case 9: // Deprecated
+            case FUNCTION_OLD:
                 type = new FunctionType(get(args[2]), toTypes(this, args, 3, args.length), args[0] != 0);
                 break;
 
-            case 10:
-                type = FloatingPointType.F16;
+            case HALF:
+                type = FloatingPointType.HALF;
                 break;
 
-            case 11:
+            case ARRAY:
                 type = new ArrayType(get(args[1]), (int) args[0]);
                 break;
 
-            case 12:
+            case VECTOR:
                 type = new VectorType(get(args[1]), (int) args[0]);
                 break;
 
-            case 13:
+            case X86_FP80:
                 type = FloatingPointType.X86_FP80;
                 break;
 
-            case 14:
+            case FP128:
                 type = FloatingPointType.FP128;
                 break;
 
-            case 15:
+            case PPC_FP128:
                 type = FloatingPointType.PPC_FP128;
                 break;
 
-            case 16:
+            case METADATA:
                 type = MetaType.METADATA;
                 break;
 
-            case 17:
+            case X86_MMX:
                 type = MetaType.X86_MMX;
                 break;
 
-            case 18:
+            case STRUCT_ANON:
                 type = new StructureType(args[0] != 0, toTypes(this, args, 1, args.length));
                 break;
 
-            case 19: {
+            case STRUCT_NAME: {
                 String name = Records.toString(args);
                 if (table[size] instanceof UnresolvedPointeeType) {
                     table[size] = new UnresolvedNamedPointeeType(name, ((UnresolvedPointeeType) table[size]).getIndex());
@@ -153,7 +155,7 @@ public final class Types implements ParserListener, Iterable<Type> {
                 }
                 return;
             }
-            case 20: {
+            case STRUCT_NAMED: {
                 StructureType structure = new StructureType(args[0] != 0, toTypes(this, args, 1, args.length));
                 if (table[size] != null) {
                     if (table[size] instanceof UnresolvedNamedPointeeType) {
@@ -165,11 +167,11 @@ public final class Types implements ParserListener, Iterable<Type> {
                 type = structure;
                 break;
             }
-            case 21:
+            case FUNCTION:
                 type = new FunctionType(get(args[1]), toTypes(this, args, 2, args.length), args[0] != 0);
                 break;
 
-            case 22:
+            case TOKEN:
                 type = MetaType.TOKEN;
                 break;
 

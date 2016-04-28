@@ -25,20 +25,17 @@ package uk.ac.man.cs.llvm.ir.types;
 
 public enum FloatingPointType implements Type {
 
-    F16("half", 16, 2),
-    F32("float", 32, 4),
-    F64("double", 64, 8),
-    X86_FP80("x86_fp80", 80, 16),
-    FP128("fp128", 128, 16),
-    PPC_FP128("ppc_fp128", 128, 16);
-
-    private final String name;
+    HALF(16, 2),
+    FLOAT(32, 4),
+    DOUBLE(64, 8),
+    X86_FP80(80, 16),
+    FP128(128, 16),
+    PPC_FP128(128, 16);
 
     private final int width, alignment;
 
-    private FloatingPointType(String name, int width, int alignment) {
+    private FloatingPointType(int width, int alignment) {
         this.width = width;
-        this.name = name;
         this.alignment = alignment;
     }
 
@@ -58,6 +55,6 @@ public enum FloatingPointType implements Type {
 
     @Override
     public String toString() {
-        return name;
+        return name().toLowerCase();
     }
 }
