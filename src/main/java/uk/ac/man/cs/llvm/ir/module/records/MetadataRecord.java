@@ -21,30 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package uk.ac.man.cs.llvm.ir.module;
+package uk.ac.man.cs.llvm.ir.module.records;
 
-import uk.ac.man.cs.llvm.bc.ParserListener;
-import uk.ac.man.cs.llvm.ir.module.records.MetadataRecord;
+public enum MetadataRecord {
+    UNUSED_0,
+    STRING,
+    VALUE,
+    NODE,
+    NAME,
+    DISTINCT_NODE,
+    KIND,
+    LOCATION,
+    OLD_NODE,
+    OLD_FN_NODE,
+    NAMED_NODE,
+    ATTACHMENT,
+    GENERIC_DEBUG,
+    SUBRANGE,
+    ENUMERATOR,
+    BASIC_TYPE,
+    FILE,
+    DERIVED_TYPE,
+    COMPOSITE_TYPE,
+    SUBROUTINE_TYPE,
+    COMPILE_UNIT,
+    SUBPROGRAM,
+    LEXICAL_BLOCK,
+    LEXICAL_BLOCK_FILE,
+    NAMESPACE,
+    TEMPLATE_TYPE,
+    TEMPLATE_VALUE,
+    GLOBAL_VAR,
+    LOCAL_VAR,
+    EXPRESSION,
+    OBJC_PROPERTY,
+    IMPORTED_ENTITY,
+    MODULE,
+    MACRO,
+    MACRO_FILE;
 
-public final class Metadata implements ParserListener {
-
-    public Metadata() {
-    }
-
-    public ParserListener getAttachments() {
-        return ParserListener.DEFAULT;
-    }
-
-    public ParserListener getKinds() {
-        return ParserListener.DEFAULT;
-    }
-
-    @Override
-    public void record(long id, long[] args) {
-        MetadataRecord record = MetadataRecord.decode(id);
-        switch (record) {
-            default:
-                break;
-        }
+    public static MetadataRecord decode(long id) {
+        return values()[(int) id];
     }
 }
